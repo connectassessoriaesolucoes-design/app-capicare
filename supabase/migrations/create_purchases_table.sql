@@ -59,10 +59,10 @@ FOR EACH ROW
 EXECUTE FUNCTION public.update_updated_at_column();
 
 -- Inserir dados de exemplo para teste
-INSERT INTO public.purchases (email, plan, duration, expiration_date, active, status)
+INSERT INTO public.purchases (email, plan, duration, purchase_date, expiration_date, active, status)
 VALUES
-  ('teste@example.com', 'premium', 90, NOW() + INTERVAL '90 days', true, 'approved'),
-  ('demo@example.com', 'basic', 30, NOW() + INTERVAL '30 days', true, 'approved')
+  ('teste@example.com', 'premium', 90, NOW(), NOW() + INTERVAL '90 days', true, 'approved'),
+  ('demo@example.com', 'basic', 30, NOW(), NOW() + INTERVAL '30 days', true, 'approved')
 ON CONFLICT DO NOTHING;
 
 -- Visualizar as compras criadas
