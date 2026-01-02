@@ -1,0 +1,23 @@
+==========================================
+COPIE E COLE ESTAS VARIÁVEIS NA SUA PLATAFORMA
+==========================================
+
+Nome: NEXT_PUBLIC_SUPABASE_URL
+Valor: https://tteyegcuwijabzypuxet.supabase.co
+
+---
+
+Nome: NEXT_PUBLIC_SUPABASE_ANON_KEY
+Valor: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0ZXllZ2N1d2lqYWJ6eXB1eGV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzIxNTIsImV4cCI6MjA4MTgwODE1Mn0.zxtVwweIXpGf_aoi1poOleRCe3Q0UHxy2vCg1UU7c3I
+
+---
+
+Nome: SUPABASE_SERVICE_ROLE_KEY
+Valor: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0ZXllZ2N1d2lqYWJ6eXB1eGV0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NjIzMjE1MiwiZXhwIjoyMDgxODA4MTUyfQ.v_jluELm8Wqr8Gw7EMo4j_XV9Gsxf7gri2Vy1YC8oWg
+
+==========================================
+IMPORTANTE:
+- Adicione TODAS as 3 variáveis
+- Faça um REDEPLOY após adicionar
+- Aguarde 1-2 minutos antes de testar
+==========================================
