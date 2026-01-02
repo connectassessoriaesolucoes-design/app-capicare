@@ -50,6 +50,31 @@ export default function Home() {
     }
   ];
 
+  // Auto-detectar compra concluída (parâmetros Kirvano na URL)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const kirvanoData = urlParams.get('kirvano_upsell');
+
+    if (kirvanoData) {
+      console.log('🎯 Detecção de compra Kirvano ativada!');
+      console.log('🎯 Parâmetro kirvano_upsell:', kirvanoData);
+
+      // Extrair email se disponível nos parâmetros
+      const email = urlParams.get('email') || urlParams.get('user_email');
+
+      if (email) {
+        console.log('📧 Email detectado na URL:', email);
+        // Auto-preencher formulário de login
+        setLoginData({ name: '', email: email });
+        setShowLoginDialog(true);
+      } else {
+        // Mostrar dialog de login para usuário inserir email
+        console.log('⚠️ Email não detectado, solicitando ao usuário...');
+        setShowLoginDialog(true);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);

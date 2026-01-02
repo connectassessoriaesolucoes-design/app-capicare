@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveUserAccess, UserAccess } from '@/lib/user-storage';
+import { createClient } from '@supabase/supabase-js';
 
 /**
  * ENDPOINT ESPECÍFICO PARA KIRVANO
@@ -188,30 +188,71 @@ export async function POST(request: NextRequest) {
     console.log('📅 Data de compra:', purchaseDate.toISOString());
     console.log('📅 Data de expiração:', expirationDate.toISOString());
 
-    // Criar objeto de usuário
-    const userData: UserAccess = {
-      email: body.email.toLowerCase().trim(),
+    // Preparar dados para Supabase
+    const email = body.email.toLowerCase().trim();
+    const purchaseData = {
+      email: email,
       plan: body.offer_name,
       duration: duration,
-      purchaseDate: purchaseDate.toISOString(),
-      expirationDate: expirationDate.toISOString(),
-      transactionId: body.transaction_id || body.id || null,
-      saleId: body.sale_id || null,
-      amount: body.amount || null,
-      status: body.status || 'APPROVED',
-      active: true
+      purchase_date: purchaseDate.toISOString(),
+      expiration_date: expirationDate.toISOString(),
+      payment_id: body.transaction_id || body.id || null,
+      active: true,
+      status: 'approved',
     };
-    
-    console.log('💾 Dados do usuário preparados:', JSON.stringify(userData, null, 2));
-    
-    // Salvar usuário
-    console.log('💾 Iniciando salvamento...');
+
+    console.log('💾 Dados preparados para Supabase:', JSON.stringify(purchaseData, null, 2));
+
+    // Salvar no Supabase
+    console.log('💾 Iniciando salvamento no Supabase...');
     try {
-      await saveUserAccess(userData);
-      console.log('✅ Usuário salvo com sucesso');
+      const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+      if (!supabaseUrl || !supabaseKey) {
+        console.error('❌ Variáveis Supabase não configuradas');
+        throw new Error('Configuração do Supabase incompleta');
+      }
+
+      const supabase = createClient(supabaseUrl, supabaseKey, {
+        auth: { autoRefreshToken: false, persistSession: false }
+      });
+
+      // Verificar se já existe uma compra para este email
+      const { data: existing } = await supabase
+        .from('purchases')
+        .select('id')
+        .ilike('email', email)
+        .single();
+
+      if (existing) {
+        // Atualizar compra existente
+        const { error: updateError } = await supabase
+          .from('purchases')
+          .update(purchaseData)
+          .ilike('email', email);
+
+        if (updateError) throw updateError;
+        console.log('✅ Compra atualizada no Supabase:', email);
+      } else {
+        // Inserir nova compra
+        const { error: insertError } = await supabase
+          .from('purchases')
+          .insert([purchaseData]);
+
+        if (insertError) throw insertError;
+        console.log('✅ Compra inserida no Supabase:', email);
+      }
     } catch (saveError) {
-      console.error('❌ Erro ao salvar usuário:', saveError);
-      // Continuar mesmo com erro - arquivo pode ter sido salvo
+      console.error('❌ Erro ao salvar no Supabase:', saveError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Erro ao salvar compra no banco de dados',
+          details: saveError instanceof Error ? saveError.message : 'Erro desconhecido'
+        },
+        { status: 500 }
+      );
     }
     
     const processingTime = Date.now() - startTime;
@@ -219,25 +260,24 @@ export async function POST(request: NextRequest) {
     console.log('✅ ========================================');
     console.log('✅ PROCESSAMENTO CONCLUÍDO COM SUCESSO');
     console.log('✅ ========================================');
-    console.log('✅ Email:', userData.email);
-    console.log('✅ Plano:', userData.plan);
-    console.log('✅ Duração:', userData.duration, 'dias');
-    console.log('✅ Expira em:', userData.expirationDate);
+    console.log('✅ Email:', email);
+    console.log('✅ Plano:', purchaseData.plan);
+    console.log('✅ Duração:', purchaseData.duration, 'dias');
+    console.log('✅ Expira em:', purchaseData.expiration_date);
     console.log('✅ Tempo de processamento:', processingTime, 'ms');
     console.log('✅ ========================================');
-    
+
     return NextResponse.json(
       {
         success: true,
         message: 'Compra processada e acesso liberado com sucesso',
         data: {
-          email: userData.email,
-          plan: userData.plan,
-          duration: userData.duration,
-          purchaseDate: userData.purchaseDate,
-          expirationDate: userData.expirationDate,
-          active: userData.active,
-          saleId: userData.saleId
+          email: email,
+          plan: purchaseData.plan,
+          duration: purchaseData.duration,
+          purchaseDate: purchaseData.purchase_date,
+          expirationDate: purchaseData.expiration_date,
+          active: purchaseData.active
         },
         processingTime: `${processingTime}ms`,
         timestamp: new Date().toISOString()
