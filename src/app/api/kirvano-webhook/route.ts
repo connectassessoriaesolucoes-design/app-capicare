@@ -179,16 +179,15 @@ export async function POST(request: NextRequest) {
     console.log('📊 Duração extraída:', duration, 'dias');
     
     // Processar datas
-    const purchaseDate = body.purchase_date || body.created_at 
-      ? new Date(body.purchase_date || body.created_at)
-      : new Date();
-    
+    const dateValue = body.purchase_date || body.created_at;
+    const purchaseDate = dateValue ? new Date(dateValue) : new Date();
+
     const expirationDate = new Date(purchaseDate);
     expirationDate.setDate(expirationDate.getDate() + duration);
-    
+
     console.log('📅 Data de compra:', purchaseDate.toISOString());
     console.log('📅 Data de expiração:', expirationDate.toISOString());
-    
+
     // Criar objeto de usuário
     const userData: UserAccess = {
       email: body.email.toLowerCase().trim(),
@@ -199,7 +198,7 @@ export async function POST(request: NextRequest) {
       transactionId: body.transaction_id || body.id || null,
       saleId: body.sale_id || null,
       amount: body.amount || null,
-      status: body.status,
+      status: body.status || 'APPROVED',
       active: true
     };
     

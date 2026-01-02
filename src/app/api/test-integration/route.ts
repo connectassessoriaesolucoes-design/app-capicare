@@ -49,25 +49,26 @@ export async function POST(request: NextRequest) {
       };
 
       console.log('🧪 Dados a serem salvos:', JSON.stringify(userData, null, 2));
-      
-      saveUserAccess(userData);
-      
+
+      await saveUserAccess(userData);
+
       console.log('✅ Usuário registrado com sucesso');
 
       // TESTE 2: Buscar usuário imediatamente após registro
       console.log('🧪 TESTE 2: Buscando usuário recém-registrado...');
-      
-      const foundUser = getUserAccess(normalizedEmail);
-      
+
+      const foundUser = await getUserAccess(normalizedEmail);
+
       if (!foundUser) {
         console.error('❌ ERRO CRÍTICO: Usuário não encontrado após registro!');
+        const allUsers = await getAllUsers();
         return NextResponse.json({
           success: false,
           error: 'Usuário não encontrado após registro',
           details: {
             emailRegistered: normalizedEmail,
             emailSearched: normalizedEmail,
-            allUsers: getAllUsers().map(u => u.email)
+            allUsers: allUsers.map(u => u.email)
           }
         }, { status: 500 });
       }
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
 
       // TESTE 3: Listar todos os usuários
       console.log('🧪 TESTE 3: Listando todos os usuários...');
-      const allUsers = getAllUsers();
+      const allUsers = await getAllUsers();
       console.log('🧪 Total de usuários:', allUsers.length);
       console.log('🧪 Emails cadastrados:', allUsers.map(u => u.email));
 
@@ -110,16 +111,16 @@ export async function POST(request: NextRequest) {
     } else if (action === 'verify') {
       // TESTE: Verificar acesso
       console.log('🧪 TESTE: Verificando acesso...');
-      
-      const user = getUserAccess(normalizedEmail);
-      
+
+      const user = await getUserAccess(normalizedEmail);
+
       if (!user) {
         console.log('❌ Usuário não encontrado');
-        
+
         // Listar todos os usuários para debug
-        const allUsers = getAllUsers();
+        const allUsers = await getAllUsers();
         console.log('🧪 Usuários cadastrados:', allUsers.map(u => u.email));
-        
+
         return NextResponse.json({
           success: false,
           error: 'Usuário não encontrado',
