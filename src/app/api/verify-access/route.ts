@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Configurações de runtime do Next.js
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 // Configuração de CORS
@@ -39,12 +39,22 @@ export async function GET() {
 // POST - Verificar se usuário tem acesso válido
 export async function POST(request: NextRequest) {
   try {
+    console.log('🚀 [VERIFY-ACCESS] Iniciando verificação...');
+
     // Criar cliente Supabase com SERVICE ROLE KEY (bypass RLS)
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    console.log('🔧 [VERIFY-ACCESS] Configurações:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseServiceKey,
+      urlPrefix: supabaseUrl?.substring(0, 20) + '...'
+    });
 
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('❌ [VERIFY-ACCESS] Variáveis de ambiente não configuradas');
+      console.error('❌ [VERIFY-ACCESS] SUPABASE_URL:', !!supabaseUrl);
+      console.error('❌ [VERIFY-ACCESS] SUPABASE_SERVICE_ROLE_KEY:', !!supabaseServiceKey);
       return NextResponse.json(
         { success: false, error: 'Configuração do servidor incompleta' },
         { status: 500, headers: corsHeaders }
@@ -154,8 +164,15 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ [VERIFY-ACCESS] Erro crítico:', error);
+    console.error('❌ [VERIFY-ACCESS] Stack:', error instanceof Error ? error.stack : 'N/A');
+    console.error('❌ [VERIFY-ACCESS] Message:', error instanceof Error ? error.message : String(error));
+
     return NextResponse.json(
-      { success: false, error: 'Erro ao verificar acesso' },
+      {
+        success: false,
+        error: 'Erro ao verificar acesso',
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500, headers: corsHeaders }
     );
   }
