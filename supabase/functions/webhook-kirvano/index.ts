@@ -256,7 +256,7 @@ serve(async (req) => {
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
         email: normalizedEmail,
         password: tempPassword,
-        email_confirm: true,
+        email_confirm: true, // Marca email como confirmado automaticamente
         user_metadata: {
           full_name: fullName,
           plan: planName,
@@ -273,6 +273,52 @@ serve(async (req) => {
         console.log('✅ USUÁRIO CRIADO NO SUPABASE AUTH!');
         console.log('✅ User ID:', authData.user.id);
         authUserId = authData.user.id;
+
+        // VERIFICAR EMAIL IMEDIATAMENTE após criação
+        console.log('📧 Verificando email automaticamente...');
+        try {
+          const { error: verifyError } = await supabase.auth.admin.updateUserById(
+            authData.user.id,
+            {
+              email_confirm: true,
+              app_metadata: {
+                email_verified: true,
+                verified_at: new Date().toISOString()
+              }
+            }
+          );
+
+          if (verifyError) {
+            console.error('⚠️ Erro ao verificar email:', verifyError.message);
+          } else {
+            console.log('✅ EMAIL VERIFICADO AUTOMATICAMENTE!');
+          }
+        } catch (verifyErr) {
+          console.error('⚠️ Erro ao verificar email:', verifyErr);
+        }
+      }
+    } else {
+      // Se usuário já existe, garantir que o email está verificado
+      console.log('🔄 Verificando email do usuário existente...');
+      try {
+        const { error: verifyError } = await supabase.auth.admin.updateUserById(
+          authUserId,
+          {
+            email_confirm: true,
+            app_metadata: {
+              email_verified: true,
+              verified_at: new Date().toISOString()
+            }
+          }
+        );
+
+        if (verifyError) {
+          console.error('⚠️ Erro ao verificar email:', verifyError.message);
+        } else {
+          console.log('✅ EMAIL DO USUÁRIO EXISTENTE VERIFICADO!');
+        }
+      } catch (verifyErr) {
+        console.error('⚠️ Erro ao verificar email:', verifyErr);
       }
     }
 

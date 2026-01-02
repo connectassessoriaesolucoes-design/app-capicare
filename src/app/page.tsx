@@ -62,30 +62,31 @@ export default function Home() {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
-    
+
+    // IMPORTANTE: Login valida apenas EMAIL (não o nome)
     const email = loginData.email.toLowerCase().trim();
     const name = loginData.name.trim();
-    
+
     try {
       console.log('🔐 ========================================');
-      console.log('🔐 INICIANDO LOGIN');
+      console.log('🔐 INICIANDO LOGIN (VALIDAÇÃO POR EMAIL)');
       console.log('🔐 ========================================');
-      console.log('🔐 Nome:', name);
-      console.log('🔐 Email:', email);
+      console.log('🔐 Nome informado:', name, '(apenas para exibição)');
+      console.log('🔐 Email (CHAVE DE ACESSO):', email);
       console.log('🔐 URL atual:', window.location.origin);
-      
+
       // Construir URL completa da API
       const apiUrl = `${window.location.origin}/api/verify-access`;
       console.log('🔐 URL da API:', apiUrl);
-      
-      // Verificar acesso via API
-      console.log('🔐 Enviando requisição para API...');
+
+      // Verificar acesso via API - VALIDA APENAS O EMAIL
+      console.log('🔐 Enviando requisição para API (validando apenas email)...');
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email }), // Apenas email é enviado para validação
       });
 
       console.log('🔐 Status da resposta:', response.status);
