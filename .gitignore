@@ -1,0 +1,15 @@
+# Vercel
+.vercel
+
+# Environment variables
+.env
+.env*.local
+
+# Dependencies
+node_modules
+
+# Next.js
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
