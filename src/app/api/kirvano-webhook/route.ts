@@ -206,11 +206,19 @@ export async function POST(request: NextRequest) {
     // Salvar no Supabase
     console.log('💾 Iniciando salvamento no Supabase...');
     try {
-      const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
       const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+      console.log('🔧 Configuração Supabase:', {
+        hasUrl: !!supabaseUrl,
+        hasKey: !!supabaseKey,
+        urlPrefix: supabaseUrl?.substring(0, 30) + '...'
+      });
 
       if (!supabaseUrl || !supabaseKey) {
         console.error('❌ Variáveis Supabase não configuradas');
+        console.error('❌ SUPABASE_URL:', !!supabaseUrl);
+        console.error('❌ SUPABASE_SERVICE_ROLE_KEY:', !!supabaseKey);
         throw new Error('Configuração do Supabase incompleta');
       }
 

@@ -41,33 +41,6 @@ export async function POST(request: NextRequest) {
   try {
     console.log('🚀 [VERIFY-ACCESS] Iniciando verificação...');
 
-    // Criar cliente Supabase com SERVICE ROLE KEY (bypass RLS)
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    console.log('🔧 [VERIFY-ACCESS] Configurações:', {
-      hasUrl: !!supabaseUrl,
-      hasKey: !!supabaseServiceKey,
-      urlPrefix: supabaseUrl?.substring(0, 20) + '...'
-    });
-
-    if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('❌ [VERIFY-ACCESS] Variáveis de ambiente não configuradas');
-      console.error('❌ [VERIFY-ACCESS] SUPABASE_URL:', !!supabaseUrl);
-      console.error('❌ [VERIFY-ACCESS] SUPABASE_SERVICE_ROLE_KEY:', !!supabaseServiceKey);
-      return NextResponse.json(
-        { success: false, error: 'Configuração do servidor incompleta' },
-        { status: 500, headers: corsHeaders }
-      );
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    });
-
     const body = await request.json();
     const { email } = body;
 
@@ -85,32 +58,107 @@ export async function POST(request: NextRequest) {
     const normalizedEmail = email.toLowerCase().trim();
     console.log('🔍 [VERIFY-ACCESS] Email normalizado:', normalizedEmail);
 
-    // Buscar compra no Supabase
-    console.log('🔍 [VERIFY-ACCESS] Buscando no Supabase...');
-    const { data: purchases, error } = await supabase
-      .from('purchases')
-      .select('*')
-      .ilike('email', normalizedEmail)
-      .eq('active', true)
-      .order('created_at', { ascending: false });
+    // Verificar se Supabase está configurado
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (error) {
-      console.error('❌ [VERIFY-ACCESS] Erro ao buscar:', error);
+    console.log('🔧 [VERIFY-ACCESS] Configurações:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseServiceKey,
+      urlPrefix: supabaseUrl?.substring(0, 20) + '...'
+    });
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('❌ [VERIFY-ACCESS] Variáveis de ambiente não configuradas');
+      console.error('❌ [VERIFY-ACCESS] SUPABASE_URL:', !!supabaseUrl);
+      console.error('❌ [VERIFY-ACCESS] SUPABASE_SERVICE_ROLE_KEY:', !!supabaseServiceKey);
+
       return NextResponse.json(
-        { success: false, error: 'Erro ao verificar acesso no banco de dados' },
+        {
+          success: false,
+          error: 'Sistema temporariamente indisponível. Entre em contato com o suporte.',
+          details: 'Configuração do banco de dados não encontrada'
+        },
+        { status: 503, headers: corsHeaders }
+      );
+    }
+
+    // Criar cliente Supabase com SERVICE ROLE KEY (bypass RLS)
+    let supabase;
+    try {
+      supabase = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      });
+      console.log('✅ [VERIFY-ACCESS] Cliente Supabase criado com sucesso');
+    } catch (clientError) {
+      console.error('❌ [VERIFY-ACCESS] Erro ao criar cliente Supabase:', clientError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Erro ao conectar com o banco de dados',
+          details: clientError instanceof Error ? clientError.message : String(clientError)
+        },
         { status: 500, headers: corsHeaders }
       );
     }
 
-    console.log('🔍 [VERIFY-ACCESS] Resultado da busca:', purchases);
-    console.log('🔍 [VERIFY-ACCESS] Total de compras encontradas:', purchases?.length || 0);
+    // Buscar compra no Supabase
+    console.log('🔍 [VERIFY-ACCESS] Buscando no Supabase...');
+
+    let purchases;
+    let error;
+
+    try {
+      const result = await supabase
+        .from('purchases')
+        .select('*')
+        .ilike('email', normalizedEmail)
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+
+      purchases = result.data;
+      error = result.error;
+
+      console.log('🔍 [VERIFY-ACCESS] Resultado da busca:', purchases);
+      console.log('🔍 [VERIFY-ACCESS] Total de compras encontradas:', purchases?.length || 0);
+
+      if (error) {
+        console.error('❌ [VERIFY-ACCESS] Erro ao buscar:', error);
+        console.error('❌ [VERIFY-ACCESS] Código do erro:', error.code);
+        console.error('❌ [VERIFY-ACCESS] Mensagem do erro:', error.message);
+        console.error('❌ [VERIFY-ACCESS] Detalhes do erro:', error.details);
+        console.error('❌ [VERIFY-ACCESS] Hint:', error.hint);
+
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Erro ao verificar acesso no banco de dados',
+            details: `${error.message} (código: ${error.code})`
+          },
+          { status: 500, headers: corsHeaders }
+        );
+      }
+    } catch (queryError) {
+      console.error('❌ [VERIFY-ACCESS] Erro na query:', queryError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Erro ao executar consulta no banco de dados',
+          details: queryError instanceof Error ? queryError.message : String(queryError)
+        },
+        { status: 500, headers: corsHeaders }
+      );
+    }
 
     if (!purchases || purchases.length === 0) {
       console.log('❌ [VERIFY-ACCESS] Nenhuma compra encontrada para:', normalizedEmail);
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Acesso não encontrado. Verifique se você usou o mesmo email da compra ou se o pagamento foi aprovado.' 
+        {
+          success: false,
+          error: 'Acesso não encontrado. Verifique se você usou o mesmo email da compra ou se o pagamento foi aprovado.'
         },
         { status: 404, headers: corsHeaders }
       );
@@ -166,11 +214,13 @@ export async function POST(request: NextRequest) {
     console.error('❌ [VERIFY-ACCESS] Erro crítico:', error);
     console.error('❌ [VERIFY-ACCESS] Stack:', error instanceof Error ? error.stack : 'N/A');
     console.error('❌ [VERIFY-ACCESS] Message:', error instanceof Error ? error.message : String(error));
+    console.error('❌ [VERIFY-ACCESS] Type:', typeof error);
+    console.error('❌ [VERIFY-ACCESS] Error object:', JSON.stringify(error, null, 2));
 
     return NextResponse.json(
       {
         success: false,
-        error: 'Erro ao verificar acesso',
+        error: 'Erro interno do servidor ao verificar acesso',
         details: error instanceof Error ? error.message : String(error)
       },
       { status: 500, headers: corsHeaders }
