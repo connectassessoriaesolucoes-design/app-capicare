@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, ChevronLeft, ChevronRight, Calendar, TrendingUp, Award, MessageCircle, User, Menu, Zap, ArrowRight } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Calendar, TrendingUp, Award, MessageCircle, User, Menu, Zap, ArrowRight, Lock } from "lucide-react";
 import { weeklyMealPlan } from "@/lib/data/meal-plans";
 import { generateFullMealPlan } from "@/lib/data/full-meal-plan";
 import { Progress } from "@/components/ui/progress";
@@ -23,10 +23,16 @@ export default function PlanoPage() {
   const [userName, setUserName] = useState("");
   const [calvicieLevel, setCalvicieLevel] = useState(0);
   const [fullPlan, setFullPlan] = useState<any[]>([]);
+  const [userPlanDuration, setUserPlanDuration] = useState(90); // Duração do plano do usuário (30, 60 ou 90)
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     setUserName(userData.name || 'Usuário');
+
+    // Definir duração do plano baseado na compra
+    const planDuration = userData.duration || 90; // 30, 60 ou 90 dias
+    setUserPlanDuration(planDuration);
+    console.log('📅 Duração do plano do usuário:', planDuration, 'dias');
 
     const level = Math.floor(Math.random() * 30) + 40;
     setCalvicieLevel(level);
@@ -182,7 +188,7 @@ export default function PlanoPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-purple-100 mb-1 font-medium">Dia do Plano</p>
-                <p className="text-4xl font-bold text-white">{selectedDay + 1}/90</p>
+                <p className="text-4xl font-bold text-white">{selectedDay + 1}/{userPlanDuration}</p>
               </div>
               <Calendar className="h-12 w-12 text-purple-400" />
             </div>
@@ -192,12 +198,39 @@ export default function PlanoPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-cyan-100 mb-1 font-medium">Progresso Total</p>
-                <p className="text-4xl font-bold text-white">{Math.round((selectedDay + 1) / 90 * 100)}%</p>
+                <p className="text-4xl font-bold text-white">{Math.round((selectedDay + 1) / userPlanDuration * 100)}%</p>
               </div>
               <Award className="h-12 w-12 text-cyan-400" />
             </div>
           </Card>
         </div>
+
+        {/* Alerta de Plano - Mostrar somente se não for o plano de 90 dias */}
+        {userPlanDuration < 90 && (
+          <Card className="p-6 mb-8 bg-gradient-to-br from-amber-500/20 to-orange-600/20 backdrop-blur-xl border border-amber-400/40 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Lock className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">
+                    Você tem acesso a {userPlanDuration} dias de receitas
+                  </h3>
+                  <p className="text-amber-100 text-sm">
+                    Desbloqueie até {90 - userPlanDuration} dias adicionais para continuar sua transformação!
+                  </p>
+                </div>
+              </div>
+              <Link href="/planos">
+                <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-6 py-6 text-base font-bold rounded-full shadow-lg whitespace-nowrap">
+                  Fazer Upgrade
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        )}
 
         {/* Day Selector */}
         <Card className="p-6 mb-8 bg-white/5 backdrop-blur-xl border border-white/10">
@@ -219,8 +252,8 @@ export default function PlanoPage() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setSelectedDay(Math.min(89, selectedDay + 1))}
-              disabled={selectedDay === 89}
+              onClick={() => setSelectedDay(Math.min(userPlanDuration - 1, selectedDay + 1))}
+              disabled={selectedDay >= (userPlanDuration - 1)}
               className="bg-white/10 border-white/20 hover:bg-white/20 text-white disabled:opacity-30"
             >
               <ChevronRight className="h-5 w-5" />
@@ -234,19 +267,24 @@ export default function PlanoPage() {
                 key => key.startsWith(`day${index}-`) && completedMeals[key]
               ).length;
               const isDayComplete = dayCompleted === totalMeals;
+              const isLocked = (index + 1) > userPlanDuration; // Bloquear dias fora do plano
 
               return (
                 <button
                   key={day.day}
-                  onClick={() => setSelectedDay(index)}
-                  className={`px-6 py-3 rounded-full whitespace-nowrap transition-all font-semibold relative ${
-                    selectedDay === index
+                  onClick={() => !isLocked && setSelectedDay(index)}
+                  disabled={isLocked}
+                  className={`px-6 py-3 rounded-full whitespace-nowrap transition-all font-semibold relative flex items-center gap-2 ${
+                    isLocked
+                      ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed opacity-60 border border-gray-600/50'
+                      : selectedDay === index
                       ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
                       : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
                   }`}
                 >
+                  {isLocked && <Lock className="h-4 w-4" />}
                   Dia {day.day}
-                  {isDayComplete && (
+                  {!isLocked && isDayComplete && (
                     <CheckCircle className="absolute -top-1 -right-1 h-5 w-5 text-green-400 bg-slate-900 rounded-full" />
                   )}
                 </button>
