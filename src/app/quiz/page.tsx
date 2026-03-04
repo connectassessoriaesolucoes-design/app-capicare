@@ -391,10 +391,7 @@ export default function QuizPage() {
         </Link>
 
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-blue-200">
-              Pergunta {currentQuestion + 1} de {quizQuestions.length}
-            </span>
+          <div className="flex justify-end items-center mb-2">
             <span className="text-sm font-medium text-cyan-400">
               {Math.round(progress)}%
             </span>
