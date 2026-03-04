@@ -35,28 +35,28 @@ export default function ResultadoPage() {
 
   const faqs = [
     {
-      question: "Quanto tempo leva para ver resultados?",
-      answer: "A maioria dos usuários relata os primeiros sinais de melhora entre 30-45 dias. Resultados mais significativos aparecem após 60-90 dias de uso consistente do método."
+      question: "Quanto tempo leva para ver fortalecimento dos enxertos?",
+      answer: "A maioria dos usuários relata sinais de fortalecimento entre 30-45 dias. Resultados mais consistentes aparecem após 60-90 dias de manutenção pós-transplante."
     },
     {
-      question: "O método funciona para todos os tipos de calvície?",
-      answer: "Sim! O Método GrowthHair é eficaz para diferentes graus de calvície, desde queda inicial até casos mais avançados. O plano é personalizado para seu nível específico."
+      question: "O método funciona para quem já fez transplante capilar?",
+      answer: "Sim! O CapiCare foi desenvolvido especificamente para manutenção pós-transplante. Ele fortalece os enxertos, reduz a queda pós-choque e maximiza os resultados do procedimento."
     },
     {
       question: "Preciso comprar suplementos caros?",
-      answer: "Não! Todas as receitas utilizam alimentos comuns encontrados em qualquer supermercado. O foco é na nutrição natural e acessível."
+      answer: "Não! Todas as receitas utilizam alimentos comuns encontrados em qualquer supermercado. O foco é na nutrição natural e acessível para fortalecer os enxertos."
     },
     {
       question: "Posso cancelar minha assinatura a qualquer momento?",
       answer: "Sim, você pode cancelar quando quiser. Além disso, oferecemos garantia de 7 dias - se não gostar, devolvemos 100% do seu dinheiro."
     },
     {
-      question: "Como funciona o acompanhamento de evolução?",
-      answer: "Você tira selfies semanais pelo app e nosso sistema gera comparativos visuais mostrando seu progresso. É motivador ver a evolução semana a semana!"
+      question: "Como funciona o acompanhamento da área implantada?",
+      answer: "Você tira selfies semanais da área transplantada pelo app e nosso sistema gera comparativos visuais mostrando a evolução dos enxertos. �� motivador ver o fortalecimento semana a semana!"
     },
     {
-      question: "O método tem efeitos colaterais?",
-      answer: "Não! Por ser 100% baseado em alimentação natural, não há efeitos colaterais. Você apenas estará nutrindo seu corpo da forma correta."
+      question: "O método interfere com o transplante?",
+      answer: "Não! Por ser 100% baseado em alimentação natural, não há interferência negativa. Você apenas estará nutrindo os enxertos da forma correta."
     }
   ];
 
@@ -169,7 +169,7 @@ export default function ResultadoPage() {
               </h2>
               
               <p className="text-blue-100 mb-8 text-lg">
-                Estamos analisando seu grau de calvície e preparando seu plano personalizado
+                Analisando seu pós-transplante e preparando seu plano de manutenção personalizado
               </p>
 
               <div className="space-y-4">
@@ -227,12 +227,12 @@ export default function ResultadoPage() {
 
           {/* Diagnóstico */}
           <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl p-8 text-white mb-8 shadow-xl shadow-cyan-500/30">
-            <h3 className="text-2xl font-bold mb-6">Seu Diagnóstico Capilar</h3>
-            
+            <h3 className="text-2xl font-bold mb-6">Seu Plano de Manutenção Pós-Transplante</h3>
+
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between mb-3">
-                  <span className="text-base font-medium">Grau de Calvície</span>
+                  <span className="text-base font-medium">Potencial de Fortalecimento</span>
                   <span className="text-base font-bold">{calvicieLevel}%</span>
                 </div>
                 <Progress value={calvicieLevel} className="h-3 bg-white/20" />
@@ -240,12 +240,12 @@ export default function ResultadoPage() {
 
               <div className="grid grid-cols-2 gap-4 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
-                  <p className="text-sm text-blue-100 mb-2">Tempo Estimado</p>
-                  <p className="text-3xl font-bold">45-60 dias</p>
+                  <p className="text-sm text-blue-100 mb-2">Fase Atual</p>
+                  <p className="text-3xl font-bold">Crescimento</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
-                  <p className="text-sm text-blue-100 mb-2">Nível de Tratamento</p>
-                  <p className="text-3xl font-bold">Moderado</p>
+                  <p className="text-sm text-blue-100 mb-2">Duração Ideal</p>
+                  <p className="text-3xl font-bold">90 dias</p>
                 </div>
               </div>
             </div>

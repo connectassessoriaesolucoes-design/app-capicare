@@ -2,8 +2,6 @@
 .vercel
 
 # Environment variables
-.env
-.env*.local
 
 # Dependencies
 node_modules
@@ -13,3 +11,4 @@ node_modules
 out
 *.tsbuildinfo
 next-env.d.ts
+.lasy/

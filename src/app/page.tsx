@@ -20,32 +20,32 @@ export default function Home() {
   const testimonials = [
     {
       image: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/1afaf0b6-ae85-4141-8f65-bbf2cd8cd45b.png",
-      text: "Em 2 semanas já senti os fios mais fortes. Nunca imaginei que a alimentação faria tanta diferença!",
+      text: "Após o transplante, segui o método e os enxertos pegaram muito bem. Em 2 meses já via crescimento consistente.",
       author: "Carlos M."
     },
     {
       image: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/5e0d391e-5539-48a8-87dc-df6448744012.png",
-      text: "Meu cabelo começou a encher nas laterais. O app é muito fácil de seguir!",
+      text: "O app me ajudou a passar pelo pós-operatório com disciplina. A área implantada ficou muito mais forte!",
       author: "Rodrigo S."
     },
     {
       image: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/70f529a5-1fcb-4634-b720-ac5097356e78.png",
-      text: "Com 30 dias já vi preenchimento no topo. Recomendo demais!",
+      text: "Fiz transplante há 6 meses e o CapiCare foi essencial para maximizar os resultados. Recomendo!",
       author: "Felipe A."
     },
     {
       image: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/85a37cbb-43e5-4a72-abe7-a5f928ca00f8.png",
-      text: "Resultados incríveis! Minha autoestima voltou depois de anos.",
+      text: "Investi no transplante e agora invisto na manutenção. Meu cabelo nunca esteve tão saudável!",
       author: "André L."
     },
     {
       image: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/9ac1a48a-93c8-4d98-81e5-1f99eefa8e14.png",
-      text: "Método simples e eficaz. Já indiquei para vários amigos!",
+      text: "Método simples para cuidar dos enxertos. O acompanhamento visual me deu muita segurança!",
       author: "Marcelo P."
     },
     {
       image: "https://k6hrqrxuu8obbfwn.public.blob.vercel-storage.com/temp/9995ed98-81d1-465e-b9fa-06482a15d73c.png",
-      text: "4 meses depois e o resultado é visível. Vale cada dia!",
+      text: "4 meses pós-transplante e o resultado é incrível. A manutenção faz toda diferença!",
       author: "Paulo R."
     }
   ];
@@ -199,11 +199,11 @@ export default function Home() {
         <div className="max-w-5xl mx-auto text-center">
           
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 leading-tight">
-            Ative o Crescimento Capilar em <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-black">90 Dias</span> com o <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 font-black">Método GrowthHair</span> da <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 font-black">CapiCare</span>.
+            Fortaleça Seus Enxertos e <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-black">Maximize os Resultados</span> do Seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 font-black">Transplante Capilar</span> com <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 font-black">CapiCare</span>.
           </h1>
-          
+
           <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-            O primeiro sistema que combina nutrição científica + acompanhamento visual + receitas práticas para recuperar seu cabelo naturalmente
+            Manutenção pós-transplante baseada em nutrição científica + acompanhamento visual + receitas práticas para preservar seu investimento
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
@@ -230,15 +230,15 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-6 text-sm text-blue-100">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-cyan-400" />
-              <span className="font-medium">100% Natural</span>
+              <span className="font-medium">Fortalecimento dos Enxertos</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-cyan-400" />
-              <span className="font-medium">Sem Efeitos Colaterais</span>
+              <span className="font-medium">Reduz Queda Pós-Choque</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-cyan-400" />
-              <span className="font-medium">Resultados Comprovados</span>
+              <span className="font-medium">Crescimento Saudável</span>
             </div>
           </div>
         </div>
@@ -248,7 +248,7 @@ export default function Home() {
       <section id="beneficios" className="py-12 md:py-16 bg-gradient-to-b from-transparent to-black/30">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-white">
-            Por que o Método GrowthHair™ Funciona?
+            Por Que Investir na Manutenção Pós-Transplante?
           </h2>
           
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -256,9 +256,9 @@ export default function Home() {
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/50">
                 <CheckCircle className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Nutrição Científica</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">Fortalecimento dos Enxertos</h3>
               <p className="text-blue-100 text-sm leading-relaxed">
-                Receitas baseadas em estudos que comprovam o poder de biotina, ferro, zinco e proteínas no crescimento capilar acelerado.
+                Nutrientes cientificamente comprovados (biotina, ferro, zinco, proteínas) que fortalecem os fios implantados e aceleram o crescimento saudável.
               </p>
             </div>
 
@@ -266,9 +266,9 @@ export default function Home() {
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/50">
                 <Star className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Acompanhamento Visual</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">Monitoramento da Evolução</h3>
               <p className="text-blue-100 text-sm leading-relaxed">
-                Tire selfies semanais e veja sua evolução em gráficos comparativos. Motivação garantida a cada semana.
+                Acompanhe a evolução da área implantada com fotos semanais e veja o fortalecimento progressivo dos seus enxertos.
               </p>
             </div>
 
@@ -276,9 +276,9 @@ export default function Home() {
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/50">
                 <CheckCircle className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Alimentos Acessíveis</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">Método Acessível</h3>
               <p className="text-blue-100 text-sm leading-relaxed">
-                Nada de ingredientes caros ou difíceis de encontrar. Tudo disponível no seu mercado local.
+                Receitas práticas com alimentos do dia a dia. Cuide dos seus enxertos sem complicação ou custos adicionais.
               </p>
             </div>
           </div>
@@ -289,10 +289,10 @@ export default function Home() {
       <section id="depoimentos" className="py-12 md:py-16 bg-black/30">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
-            Transformações Reais
+            Resultados Pós-Transplante
           </h2>
           <p className="text-center text-blue-100 mb-10 max-w-2xl mx-auto">
-            Veja os resultados de homens que seguiram o método GrowthHair™
+            Veja como a manutenção adequada potencializou os resultados do transplante capilar
           </p>
 
           {/* Carrossel */}
@@ -350,10 +350,10 @@ export default function Home() {
       <section className="py-16 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Comece Sua Transformação Hoje
+            Proteja Seu Investimento no Transplante
           </h2>
           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-            Faça o quiz gratuito e receba seu plano personalizado em minutos
+            Faça o quiz gratuito e receba seu plano de manutenção pós-transplante personalizado
           </p>
           <Link href="/quiz">
             <Button 

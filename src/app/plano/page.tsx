@@ -130,7 +130,7 @@ export default function PlanoPage() {
             Olá, {userName}! 👋
           </h1>
           <p className="text-xl text-blue-100 mb-6">
-            Sua jornada de transformação começa agora! Siga seu plano e conquiste resultados incríveis! 🚀
+            Fortaleça seus enxertos e maximize os resultados do seu transplante capilar! 🚀
           </p>
 
           {/* Análise Capilar no Topo */}
@@ -140,15 +140,15 @@ export default function PlanoPage() {
                 <TrendingUp className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Sua Análise Capilar</h3>
-                <p className="text-blue-100">Diagnóstico personalizado</p>
+                <h3 className="text-2xl font-bold text-white">Acompanhamento Pós-Transplante</h3>
+                <p className="text-blue-100">Manutenção personalizada dos enxertos</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-white font-medium">Grau de Calvície</span>
+                  <span className="text-white font-medium">Fortalecimento dos Enxertos</span>
                   <span className="text-cyan-400 font-bold">{calvicieLevel}%</span>
                 </div>
                 <Progress value={calvicieLevel} className="h-3 bg-white/10" />
@@ -156,12 +156,12 @@ export default function PlanoPage() {
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                  <p className="text-sm text-blue-200 mb-1">Tempo Estimado</p>
-                  <p className="text-xl md:text-2xl font-bold text-white">45-60 dias</p>
+                  <p className="text-sm text-blue-200 mb-1">Fase Atual</p>
+                  <p className="text-xl md:text-2xl font-bold text-white">Crescimento</p>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                  <p className="text-sm text-blue-200 mb-1">Nível</p>
-                  <p className="text-xl md:text-2xl font-bold text-white">Moderado</p>
+                  <p className="text-sm text-blue-200 mb-1">Duração</p>
+                  <p className="text-xl md:text-2xl font-bold text-white">{userPlanDuration} dias</p>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                   <p className="text-sm text-blue-200 mb-1">Progresso Hoje</p>
@@ -218,7 +218,7 @@ export default function PlanoPage() {
                     Você tem acesso a {userPlanDuration} dias de receitas
                   </h3>
                   <p className="text-amber-100 text-sm">
-                    Desbloqueie até {90 - userPlanDuration} dias adicionais para continuar sua transformação!
+                    Desbloqueie até {90 - userPlanDuration} dias adicionais para fortalecer ainda mais seus enxertos!
                   </p>
                 </div>
               </div>

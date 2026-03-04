@@ -37,10 +37,10 @@ export default function PlanosPage() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold text-white mb-6">
-            Escolha o Plano Ideal Para Você
+            Fortaleça Seu Transplante Capilar
           </h2>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Desbloqueie todo o potencial do CapiCare e acelere seus resultados com acompanhamento profissional
+            Escolha o plano de manutenção pós-transplante ideal e maximize os resultados do seu procedimento
           </p>
         </div>
 
@@ -61,23 +61,23 @@ export default function PlanosPage() {
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3 text-blue-100">
                 <CheckCircle className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                <span>Plano alimentar completo de 7 dias</span>
+                <span>30 dias de receitas para fortalecimento</span>
               </li>
               <li className="flex items-start gap-3 text-blue-100">
                 <CheckCircle className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                <span>Acompanhamento de evolução com fotos</span>
+                <span>Acompanhamento visual da área implantada</span>
               </li>
               <li className="flex items-start gap-3 text-blue-100">
                 <CheckCircle className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                <span>Acesso ao chat da comunidade</span>
+                <span>Nutrientes focados no pós-transplante</span>
               </li>
               <li className="flex items-start gap-3 text-blue-100">
                 <CheckCircle className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                <span>Suporte prioritário via chat</span>
+                <span>Suporte via chat da comunidade</span>
               </li>
               <li className="flex items-start gap-3 text-blue-100">
                 <CheckCircle className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                <span>Atualizações semanais do plano</span>
+                <span>Orientações de manutenção contínua</span>
               </li>
             </ul>
             <Button 
@@ -112,19 +112,19 @@ export default function PlanosPage() {
               </li>
               <li className="flex items-start gap-3 text-purple-100">
                 <CheckCircle className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <span>Análises detalhadas mensais</span>
+                <span>60 dias de acompanhamento completo</span>
               </li>
               <li className="flex items-start gap-3 text-purple-100">
                 <CheckCircle className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <span>Relatórios de progresso personalizados</span>
+                <span>Análises de crescimento mensais</span>
               </li>
               <li className="flex items-start gap-3 text-purple-100">
                 <CheckCircle className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <span>10% de desconto em produtos parceiros</span>
+                <span>Relatórios de fortalecimento</span>
               </li>
               <li className="flex items-start gap-3 text-purple-100">
                 <CheckCircle className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <span>Acesso a webinars exclusivos</span>
+                <span>Webinars sobre cuidados pós-transplante</span>
               </li>
             </ul>
             <Button 
@@ -155,15 +155,15 @@ export default function PlanosPage() {
               </li>
               <li className="flex items-start gap-3 text-emerald-100">
                 <CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span>Consultoria personalizada mensal</span>
+                <span>90 dias completos de fortalecimento</span>
               </li>
               <li className="flex items-start gap-3 text-emerald-100">
                 <CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span>Acesso vitalício ao conteúdo</span>
+                <span>Consultoria para máximos resultados</span>
               </li>
               <li className="flex items-start gap-3 text-emerald-100">
                 <CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span>20% de desconto em produtos parceiros</span>
+                <span>Acompanhamento completo pós-transplante</span>
               </li>
               <li className="flex items-start gap-3 text-emerald-100">
                 <CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -186,19 +186,19 @@ export default function PlanosPage() {
           </h3>
           <div className="space-y-6 max-w-3xl mx-auto">
             <div>
+              <h4 className="text-xl font-bold text-white mb-2">O CapiCare funciona para quem já fez transplante?</h4>
+              <p className="text-blue-100">Sim! O CapiCare foi desenvolvido especificamente para quem fez transplante capilar. Nosso método fortalece os enxertos e maximiza os resultados do procedimento.</p>
+            </div>
+            <div>
+              <h4 className="text-xl font-bold text-white mb-2">Quanto tempo devo usar após o transplante?</h4>
+              <p className="text-blue-100">Recomendamos 90 dias para garantir o fortalecimento completo dos enxertos durante a fase crítica de crescimento.</p>
+            </div>
+            <div>
               <h4 className="text-xl font-bold text-white mb-2">Posso cancelar a qualquer momento?</h4>
-              <p className="text-blue-100">Sim! Você pode cancelar sua assinatura a qualquer momento sem taxas adicionais.</p>
+              <p className="text-blue-100">Sim! Voc�� pode cancelar sua assinatura a qualquer momento sem taxas adicionais.</p>
             </div>
             <div>
-              <h4 className="text-xl font-bold text-white mb-2">Como funciona a garantia de 30 dias?</h4>
-              <p className="text-blue-100">Se você não estiver satisfeito com o plano anual, devolvemos 100% do seu dinheiro nos primeiros 30 dias.</p>
-            </div>
-            <div>
-              <h4 className="text-xl font-bold text-white mb-2">Posso mudar de plano depois?</h4>
-              <p className="text-blue-100">Sim! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento.</p>
-            </div>
-            <div>
-              <h4 className="text-xl font-bold text-white mb-2">Quais formas de pagamento são aceitas?</h4>
+              <h4 className="text-xl font-bold text-white mb-2">Quais formas de pagamento s��o aceitas?</h4>
               <p className="text-blue-100">Aceitamos cartão de crédito, débito e PIX para sua comodidade.</p>
             </div>
           </div>

@@ -13,24 +13,24 @@ export interface QuizQuestion {
 export const quizQuestions: QuizQuestion[] = [
   {
     id: 1,
-    question: "Como você classificaria a saúde atual do seu cabelo?",
+    question: "Você já realizou transplante capilar?",
     options: [
-      "Excelente - cabelo forte e saudável",
-      "Bom - alguns fios fracos",
-      "Regular - queda moderada",
-      "Ruim - queda intensa"
+      "Sim, há menos de 3 meses",
+      "Sim, entre 3-6 meses",
+      "Sim, há mais de 6 meses",
+      "Não, ainda vou fazer"
     ],
     type: 'direct',
     image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=400&fit=crop" // Cabelo masculino
   },
   {
     id: 2,
-    question: "Você sabia que alguns alimentos podem aumentar o crescimento do cabelo?",
+    question: "Você sabia que nutrientes específicos fortalecem os enxertos do transplante?",
     options: ["Sim", "Não"],
     type: 'info',
     educationalContent: {
-      title: "O Poder da Alimentação no Crescimento Capilar",
-      description: "Alguns alimentos são ricos em vitaminas essenciais como biotina, ferro, zinco e proteínas, capazes de estimular a fase anágena do fio, acelerando o crescimento capilar. Por isso, seu plano será baseado em alimentos simples e acessíveis que realmente favorecem o fortalecimento dos fios."
+      title: "Nutrição Para Fortalecer Enxertos",
+      description: "Biotina, ferro, zinco e proteínas são essenciais para o fortalecimento dos fios implantados no transplante capilar. Esses nutrientes aceleram o crescimento, reduzem a queda pós-choque e maximizam os resultados do seu procedimento. Seu plano será baseado em alimentos que potencializam o sucesso do transplante."
     },
     image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=400&fit=crop" // Alimentos saudáveis
   },
@@ -60,12 +60,12 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 5,
-    question: "Você sabia que o sono inadequado pode acelerar a queda capilar?",
+    question: "Você sabia que o sono inadequado pode afetar a fixação dos enxertos?",
     options: ["Sim", "Não"],
     type: 'info',
     educationalContent: {
-      title: "Sono e Crescimento Capilar",
-      description: "Durante o sono profundo, o corpo libera hormônios essenciais para a regeneração celular, incluindo os folículos capilares. A privação de sono aumenta o cortisol (hormônio do estresse), que pode enfraquecer os fios e acelerar a queda. Dormir bem é fundamental para resultados visíveis."
+      title: "Sono e Fortalecimento dos Enxertos",
+      description: "Durante o sono profundo, o corpo libera hormônios essenciais para a regeneração celular e fixação dos enxertos. A privação de sono aumenta o cortisol (hormônio do estresse), que pode enfraquecer os fios implantados e comprometer os resultados do transplante. Dormir bem é crucial no pós-operatório."
     },
     image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&h=400&fit=crop" // Pessoa dormindo
   },
@@ -107,12 +107,12 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 9,
-    question: "Você sabia que a hidratação afeta diretamente a saúde dos fios?",
+    question: "Você sabia que a hidratação é crucial para os enxertos pegarem bem?",
     options: ["Sim", "Não"],
     type: 'info',
     educationalContent: {
-      title: "Hidratação e Saúde Capilar",
-      description: "A água é essencial para transportar nutrientes até os folículos capilares. A desidratação torna os fios quebradiços e fracos. Beber pelo menos 2 litros de água por dia melhora significativamente a textura e o crescimento do cabelo."
+      title: "Hidratação e Fixação dos Enxertos",
+      description: "A água é essencial para transportar nutrientes até os folículos implantados no transplante. A desidratação compromete a circulação sanguínea na área transplantada, dificultando a fixação dos enxertos. Beber pelo menos 2 litros de água por dia é fundamental no pós-operatório."
     },
     image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=800&h=400&fit=crop" // Água/hidratação
   },
@@ -154,23 +154,23 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 13,
-    question: "Você sabia que o zinco é crucial para prevenir a queda capilar?",
+    question: "Você sabia que o zinco é crucial para o fortalecimento dos enxertos?",
     options: ["Sim", "Não"],
     type: 'info',
     educationalContent: {
-      title: "Zinco: O Mineral Essencial",
-      description: "O zinco desempenha papel fundamental na síntese de proteínas e na divisão celular dos folículos capilares. A deficiência de zinco está diretamente ligada à queda de cabelo. Alimentos como carne vermelha, frango, castanhas e feijão são excelentes fontes."
+      title: "Zinco: Mineral Essencial Pós-Transplante",
+      description: "O zinco desempenha papel fundamental na síntese de proteínas e na divisão celular dos folículos implantados. A deficiência de zinco pode comprometer a fixação dos enxertos e reduzir os resultados do transplante. Alimentos como carne vermelha, frango, castanhas e feijão são excelentes fontes."
     },
     image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=800&h=400&fit=crop" // Castanhas/zinco
   },
   {
     id: 14,
-    question: "Há quanto tempo você notou mudanças no seu cabelo?",
+    question: "Quanto tempo faz que realizou o transplante capilar?",
     options: [
-      "Menos de 3 meses",
+      "Menos de 1 mês",
+      "1-3 meses",
       "3-6 meses",
-      "6-12 meses",
-      "Mais de 1 ano"
+      "Mais de 6 meses"
     ],
     type: 'direct',
     image: "https://images.unsplash.com/photo-1622296089863-eb7fc530daa8?w=800&h=400&fit=crop" // Espelho/reflexão
@@ -179,43 +179,43 @@ export const quizQuestions: QuizQuestion[] = [
     id: 15,
     question: "Qual é o seu principal objetivo com o CapiCare?",
     options: [
-      "Reduzir a queda capilar",
-      "Acelerar o crescimento",
-      "Fortalecer os fios",
-      "Todos os acima"
+      "Fortalecer os enxertos implantados",
+      "Acelerar o crescimento dos fios",
+      "Reduzir a queda pós-choque",
+      "Maximizar os resultados do transplante"
     ],
     type: 'direct',
     image: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=800&h=400&fit=crop" // Objetivo/meta
   },
   {
     id: 16,
-    question: "Você tem histórico familiar de calvície?",
+    question: "Como você avalia a fixação dos enxertos até agora?",
     options: [
-      "Sim, pai e/ou avô",
-      "Sim, outros familiares",
-      "Não tenho certeza",
-      "Não"
+      "Excelente - tudo pegou bem",
+      "Boa - maioria pegou",
+      "Regular - alguns caíram",
+      "Ainda é cedo para avaliar"
     ],
     type: 'direct',
     image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=400&fit=crop" // Família
   },
   {
     id: 17,
-    question: "Você sabia que a biotina é conhecida como 'vitamina do cabelo'?",
+    question: "Você sabia que a biotina fortalece os enxertos implantados?",
     options: ["Sim", "Não"],
     type: 'info',
     educationalContent: {
-      title: "Biotina: A Vitamina do Crescimento",
-      description: "A biotina (vitamina B7) é essencial para a produção de queratina, a proteína que forma os fios de cabelo. Ela fortalece a estrutura capilar e estimula o crescimento. Ovos, nozes, abacate e batata-doce são fontes naturais ricas em biotina."
+      title: "Biotina: Essencial Pós-Transplante",
+      description: "A biotina (vitamina B7) é essencial para a produção de queratina, a proteína que forma os fios implantados. Ela fortalece a estrutura dos enxertos e estimula o crescimento saudável após o transplante. Ovos, nozes, abacate e batata-doce são fontes naturais ricas em biotina."
     },
     image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=800&h=400&fit=crop" // Ovos/biotina
   },
   {
     id: 18,
-    question: "Você está disposto a seguir um plano alimentar por 60 dias?",
+    question: "Está disposto a seguir um plano de manutenção pós-transplante por 90 dias?",
     options: [
       "Sim, totalmente comprometido",
-      "Sim, vou me esforçar",
+      "Sim, vou me dedicar",
       "Talvez, depende da dificuldade",
       "Não tenho certeza"
     ],
