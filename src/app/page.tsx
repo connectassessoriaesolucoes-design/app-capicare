@@ -199,7 +199,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto text-center">
           
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 leading-tight">
-            Fortaleça Seus Enxertos e <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-black">Maximize os Resultados</span> do Seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 font-black">Transplante Capilar</span> com <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 font-black">CapiCare</span>.
+            Você Pagou Caro no Transplante... Agora Não Deixe Seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-black">Resultado Falhar</span> nos <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 font-black">Primeiros Meses!</span>
           </h1>
 
           <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
