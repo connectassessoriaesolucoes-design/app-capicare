@@ -12,3 +12,7 @@ out
 *.tsbuildinfo
 next-env.d.ts
 .lasy/
+
+# Lasy internal
+.claude
+.lasy
