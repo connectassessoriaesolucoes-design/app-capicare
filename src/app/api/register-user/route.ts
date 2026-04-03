@@ -43,59 +43,24 @@ export async function POST(request: NextRequest) {
       auth: { autoRefreshToken: false, persistSession: false }
     });
 
-    // Garantir que a tabela existe — tenta criar se não existir
-    const { error: tableCheckError } = await supabase.from('app_users').select('id').limit(1);
-    if (tableCheckError && tableCheckError.code === '42P01') {
-      // Tabela não existe, cria via Management API
-      const projectRef = supabaseUrl.replace('https://', '').split('.')[0];
-      await fetch(`https://api.supabase.com/v1/projects/${projectRef}/database/query`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseServiceKey}`
-        },
-        body: JSON.stringify({
-          query: `
-            CREATE TABLE IF NOT EXISTS app_users (
-              id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-              name TEXT NOT NULL,
-              email TEXT NOT NULL UNIQUE,
-              plan TEXT NOT NULL DEFAULT 'trial',
-              duration INTEGER NOT NULL DEFAULT 30,
-              purchase_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-              expiration_date TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '30 days'),
-              active BOOLEAN NOT NULL DEFAULT true,
-              status TEXT NOT NULL DEFAULT 'trial',
-              quiz_answers JSONB,
-              quiz_completed BOOLEAN NOT NULL DEFAULT false,
-              created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-              updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-            );
-            CREATE INDEX IF NOT EXISTS app_users_email_idx ON app_users(email);
-            ALTER TABLE app_users ENABLE ROW LEVEL SECURITY;
-          `
-        })
-      }).catch(() => null);
-      // Pequena pausa para a tabela ser criada
-      await new Promise(r => setTimeout(r, 500));
-    }
+    const now = new Date();
+    const expirationDate = new Date(now);
+    expirationDate.setDate(expirationDate.getDate() + 30);
 
-    // Verificar se email já existe
-    const { data: existing } = await supabase
-      .from('app_users')
-      .select('id, email, name, plan, duration, expiration_date, active, quiz_completed')
-      .ilike('email', normalizedEmail)
-      .single();
+    // Verificar se usuário já existe no Auth
+    const { data: listData } = await supabase.auth.admin.listUsers();
+    const existingAuthUser = listData?.users?.find(
+      u => u.email?.toLowerCase() === normalizedEmail
+    );
 
-    if (existing) {
-      // Usuário já existe - retorna dados existentes
-      const now = new Date();
-      const expirationDate = new Date(existing.expiration_date);
-      const daysRemaining = Math.ceil((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    if (existingAuthUser) {
+      const meta = existingAuthUser.user_metadata || {};
+      const expDate = meta.expiration_date ? new Date(meta.expiration_date) : expirationDate;
+      const daysRemaining = Math.ceil((expDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
-      if (now > expirationDate || !existing.active) {
+      if (now > expDate) {
         return NextResponse.json(
-          { success: false, error: 'Este email já está cadastrado mas o acesso expirou. Entre em contato com o suporte.' },
+          { success: false, error: 'Este email já está cadastrado mas o acesso expirou. Use o botão "Já tenho conta" para acessar.' },
           { status: 409, headers: corsHeaders }
         );
       }
@@ -105,28 +70,47 @@ export async function POST(request: NextRequest) {
         message: 'Usuário já cadastrado',
         alreadyExists: true,
         data: {
-          id: existing.id,
-          name: existing.name,
-          email: existing.email,
-          plan: existing.plan,
-          duration: existing.duration,
-          expirationDate: existing.expiration_date,
-          active: existing.active,
-          quizCompleted: existing.quiz_completed,
+          id: existingAuthUser.id,
+          name: meta.name || normalizedName,
+          email: normalizedEmail,
+          plan: meta.plan || 'trial',
+          duration: meta.duration || 30,
+          expirationDate: expDate.toISOString(),
+          active: true,
+          quizCompleted: meta.quiz_completed || false,
           daysRemaining
         }
       }, { headers: corsHeaders });
     }
 
-    // Calcular datas do trial de 30 dias
-    const now = new Date();
-    const expirationDate = new Date(now);
-    expirationDate.setDate(expirationDate.getDate() + 30);
+    // Criar novo usuário via Auth Admin API
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email: normalizedEmail,
+      email_confirm: true,
+      user_metadata: {
+        name: normalizedName,
+        plan: 'trial',
+        duration: 30,
+        purchase_date: now.toISOString(),
+        expiration_date: expirationDate.toISOString(),
+        active: true,
+        status: 'trial',
+        quiz_completed: false,
+      }
+    });
 
-    // Inserir novo usuário
-    const { data: newUser, error: insertError } = await supabase
-      .from('app_users')
-      .insert({
+    if (authError || !authData?.user) {
+      console.error('[REGISTER-USER] Auth error:', authError);
+      return NextResponse.json(
+        { success: false, error: 'Erro ao criar conta. Tente novamente.' },
+        { status: 500, headers: corsHeaders }
+      );
+    }
+
+    // Tentar salvar também na tabela app_users (se existir)
+    try {
+      await supabase.from('app_users').insert({
+        id: authData.user.id,
         name: normalizedName,
         email: normalizedEmail,
         plan: 'trial',
@@ -136,36 +120,22 @@ export async function POST(request: NextRequest) {
         active: true,
         status: 'trial',
         quiz_completed: false
-      })
-      .select()
-      .single();
-
-    if (insertError) {
-      console.error('[REGISTER-USER] Erro ao inserir:', insertError);
-      // Tenta tratar conflito de email
-      if (insertError.code === '23505') {
-        return NextResponse.json(
-          { success: false, error: 'Este email já está cadastrado. Use o botão "Já tenho conta" para acessar.' },
-          { status: 409, headers: corsHeaders }
-        );
-      }
-      return NextResponse.json(
-        { success: false, error: 'Erro ao criar conta. Tente novamente.' },
-        { status: 500, headers: corsHeaders }
-      );
+      });
+    } catch {
+      // Tabela pode não existir ainda — ok, usamos user_metadata como fallback
     }
 
     return NextResponse.json({
       success: true,
       message: 'Conta criada com sucesso! Você tem 30 dias grátis.',
       data: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        plan: newUser.plan,
-        duration: newUser.duration,
-        expirationDate: newUser.expiration_date,
-        active: newUser.active,
+        id: authData.user.id,
+        name: normalizedName,
+        email: normalizedEmail,
+        plan: 'trial',
+        duration: 30,
+        expirationDate: expirationDate.toISOString(),
+        active: true,
         quizCompleted: false,
         daysRemaining: 30
       }

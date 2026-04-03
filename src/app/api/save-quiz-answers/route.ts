@@ -40,17 +40,46 @@ export async function POST(request: NextRequest) {
       auth: { autoRefreshToken: false, persistSession: false }
     });
 
-    const { error } = await supabase
-      .from('app_users')
-      .update({
-        quiz_answers: answers,
-        quiz_completed: true,
-        updated_at: new Date().toISOString()
-      })
-      .ilike('email', email.toLowerCase().trim());
+    const normalizedEmail = email.toLowerCase().trim();
+    let saved = false;
 
-    if (error) {
-      console.error('[SAVE-QUIZ] Erro:', error);
+    // 1. Tentar salvar na tabela app_users
+    try {
+      const { error: tableError } = await supabase
+        .from('app_users')
+        .update({
+          quiz_answers: answers,
+          quiz_completed: true,
+          updated_at: new Date().toISOString()
+        })
+        .ilike('email', normalizedEmail);
+
+      if (!tableError) saved = true;
+    } catch {
+      // tabela pode não existir
+    }
+
+    // 2. Salvar no user_metadata do Auth (sempre funciona)
+    try {
+      const { data: listData } = await supabase.auth.admin.listUsers();
+      const authUser = listData?.users?.find(u => u.email?.toLowerCase() === normalizedEmail);
+
+      if (authUser) {
+        await supabase.auth.admin.updateUserById(authUser.id, {
+          user_metadata: {
+            ...authUser.user_metadata,
+            quiz_answers: answers,
+            quiz_completed: true,
+            treatment_level: treatmentLevel || 'intermediário'
+          }
+        });
+        saved = true;
+      }
+    } catch (authErr) {
+      console.error('[SAVE-QUIZ] Auth error:', authErr);
+    }
+
+    if (!saved) {
       return NextResponse.json(
         { success: false, error: 'Erro ao salvar respostas' },
         { status: 500, headers: corsHeaders }
