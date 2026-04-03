@@ -234,26 +234,6 @@ export default function PerfilPage() {
             </Button>
           </div>
         </Card>
-
-        {/* Card de Upgrade - Direcionando para Landing Page do Boné */}
-        <Card className="p-8 bg-gradient-to-br from-blue-500/20 to-cyan-600/20 backdrop-blur-xl border border-blue-400/30 text-center mt-8">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/50">
-              <Zap className="h-8 w-8 text-white" />
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-white mb-4">
-            Turbine Seus Resultados
-          </h3>
-          <p className="text-blue-100 mb-6">
-            Acelere o crescimento capilar com o Boné CapiCare de ledterapia profissional
-          </p>
-          <Link href="/bone-ledterapia">
-            <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white px-8 py-6 text-lg font-bold rounded-full shadow-lg shadow-blue-500/50">
-              Conhecer o Boné CapiCare
-            </Button>
-          </Link>
-        </Card>
       </div>
     </div>
   );
