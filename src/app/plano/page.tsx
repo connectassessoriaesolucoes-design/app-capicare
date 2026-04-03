@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, ChevronLeft, ChevronRight, Calendar, TrendingUp, Award, MessageCircle, User, Menu, Zap, ArrowRight, Lock } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Calendar, TrendingUp, Award, MessageCircle, User, Menu, Zap, ArrowRight, Lock, Clock } from "lucide-react";
 import { weeklyMealPlan } from "@/lib/data/meal-plans";
 import { generateFullMealPlan } from "@/lib/data/full-meal-plan";
 import { Progress } from "@/components/ui/progress";
@@ -376,25 +376,25 @@ export default function PlanoPage() {
           </Card>
         </Link>
 
-        {/* CTA Boné de Ledterapia - FRASE REMOVIDA */}
-        <Card className="p-8 md:p-12 backdrop-blur-xl border text-center shadow-2xl bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 border-amber-400/40 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-red-500/10 animate-pulse" />
+        {/* CTA Liberar mais acesso */}
+        <Card className="p-8 md:p-12 backdrop-blur-xl border text-center shadow-2xl bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-indigo-500/20 border-cyan-400/40 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 animate-pulse" />
           <div className="relative z-10">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Zap className="h-12 w-12 text-amber-400 animate-bounce" />
+              <Clock className="h-12 w-12 text-cyan-400 animate-bounce" />
               <h3 className="text-3xl md:text-4xl font-bold text-white">
-                Turbine Seus Resultados!
+                Continue Sua Jornada!
               </h3>
-              <Zap className="h-12 w-12 text-amber-400 animate-bounce" />
+              <Clock className="h-12 w-12 text-cyan-400 animate-bounce" />
             </div>
-            <p className="text-amber-100 mb-6 text-lg md:text-xl max-w-2xl mx-auto">
-              Acelere o crescimento capilar com nosso <span className="font-bold text-amber-300">Boné de Ledterapia</span> profissional.
+            <p className="text-cyan-100 mb-6 text-lg md:text-xl max-w-2xl mx-auto">
+              Amplie seu acesso ao app e mantenha os cuidados pós-transplante por mais tempo.
             </p>
-            <Link href="/bone-ledterapia">
-              <Button 
-                className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white px-12 py-8 text-xl font-bold rounded-full shadow-2xl shadow-amber-500/50 transform hover:scale-105 transition-all"
+            <Link href="/acesso-planos">
+              <Button
+                className="bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 hover:from-cyan-600 hover:via-blue-600 hover:to-indigo-600 text-white px-12 py-8 text-xl font-bold rounded-full shadow-2xl shadow-cyan-500/50 transform hover:scale-105 transition-all"
               >
-                Conhecer o Boné de Ledterapia
+                Liberar mais acesso ao App
                 <ArrowRight className="ml-3 h-7 w-7" />
               </Button>
             </Link>
