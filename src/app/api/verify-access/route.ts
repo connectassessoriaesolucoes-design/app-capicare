@@ -105,84 +105,92 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Buscar compra no Supabase
-    console.log('🔍 [VERIFY-ACCESS] Buscando no Supabase...');
+    // Buscar primeiro na tabela app_users (cadastro pelo app)
+    console.log('🔍 [VERIFY-ACCESS] Buscando em app_users...');
 
-    let purchases;
-    let error;
+    let user: Record<string, unknown> | null = null;
 
     try {
-      const result = await supabase
-        .from('purchases')
+      const { data: appUser } = await supabase
+        .from('app_users')
         .select('*')
         .ilike('email', normalizedEmail)
         .eq('active', true)
-        .order('created_at', { ascending: false });
+        .single();
 
-      purchases = result.data;
-      error = result.error;
+      if (appUser) {
+        user = {
+          ...appUser,
+          plan: appUser.plan || 'trial',
+          purchase_date: appUser.purchase_date,
+          expiration_date: appUser.expiration_date,
+        };
+        console.log('✅ [VERIFY-ACCESS] Usuário encontrado em app_users');
+      }
+    } catch {
+      // tabela pode não existir ainda, ignora
+    }
 
-      console.log('🔍 [VERIFY-ACCESS] Resultado da busca:', purchases);
-      console.log('🔍 [VERIFY-ACCESS] Total de compras encontradas:', purchases?.length || 0);
+    // Se não encontrou em app_users, busca na tabela purchases (legado)
+    if (!user) {
+      console.log('🔍 [VERIFY-ACCESS] Buscando em purchases...');
+      try {
+        const { data: purchases, error } = await supabase
+          .from('purchases')
+          .select('*')
+          .ilike('email', normalizedEmail)
+          .eq('active', true)
+          .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('❌ [VERIFY-ACCESS] Erro ao buscar:', error);
-        console.error('❌ [VERIFY-ACCESS] Código do erro:', error.code);
-        console.error('❌ [VERIFY-ACCESS] Mensagem do erro:', error.message);
-        console.error('❌ [VERIFY-ACCESS] Detalhes do erro:', error.details);
-        console.error('❌ [VERIFY-ACCESS] Hint:', error.hint);
+        if (error) {
+          console.error('❌ [VERIFY-ACCESS] Erro ao buscar em purchases:', error.message);
+          return NextResponse.json(
+            { success: false, error: 'Erro ao verificar acesso no banco de dados' },
+            { status: 500, headers: corsHeaders }
+          );
+        }
 
+        if (purchases && purchases.length > 0) {
+          user = purchases[0];
+          console.log('✅ [VERIFY-ACCESS] Usuário encontrado em purchases');
+        }
+      } catch (queryError) {
+        console.error('❌ [VERIFY-ACCESS] Erro na query:', queryError);
         return NextResponse.json(
-          {
-            success: false,
-            error: 'Erro ao verificar acesso no banco de dados',
-            details: `${error.message} (código: ${error.code})`
-          },
+          { success: false, error: 'Erro ao executar consulta no banco de dados' },
           { status: 500, headers: corsHeaders }
         );
       }
-    } catch (queryError) {
-      console.error('❌ [VERIFY-ACCESS] Erro na query:', queryError);
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Erro ao executar consulta no banco de dados',
-          details: queryError instanceof Error ? queryError.message : String(queryError)
-        },
-        { status: 500, headers: corsHeaders }
-      );
     }
 
-    if (!purchases || purchases.length === 0) {
-      console.log('❌ [VERIFY-ACCESS] Nenhuma compra encontrada para:', normalizedEmail);
+    if (!user) {
+      console.log('❌ [VERIFY-ACCESS] Usuário não encontrado:', normalizedEmail);
       return NextResponse.json(
         {
           success: false,
-          error: 'Acesso não encontrado. Verifique se você usou o mesmo email da compra ou se o pagamento foi aprovado.'
+          error: 'Acesso não encontrado. Verifique se você usou o mesmo email do cadastro.'
         },
         { status: 404, headers: corsHeaders }
       );
     }
+    // Type-safe access
+    const userEmail = user.email as string;
+    const userPlan = user.plan as string;
+    const userDuration = user.duration as number;
+    const userActive = user.active as boolean;
+    const userStatus = user.status as string;
+    const userPurchaseDate = user.purchase_date as string;
+    const userExpirationDate = user.expiration_date as string;
+    const userQuizCompleted = user.quiz_completed as boolean | undefined;
 
-    // Pegar compra mais recente
-    const user = purchases[0];
-    console.log('✅ [VERIFY-ACCESS] Compra encontrada:', {
-      id: user.id,
-      email: user.email,
-      plan: user.plan,
-      duration: user.duration,
-      expirationDate: user.expiration_date,
-      active: user.active
+    console.log('✅ [VERIFY-ACCESS] Usuário encontrado:', {
+      email: userEmail, plan: userPlan, duration: userDuration, expirationDate: userExpirationDate, active: userActive
     });
 
     // Verificar expiração
     const now = new Date();
-    const expirationDate = new Date(user.expiration_date);
+    const expirationDate = new Date(userExpirationDate);
     const daysRemaining = Math.ceil((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-
-    console.log('⏰ [VERIFY-ACCESS] Data atual:', now.toISOString());
-    console.log('⏰ [VERIFY-ACCESS] Data de expiração:', expirationDate.toISOString());
-    console.log('⏰ [VERIFY-ACCESS] Dias restantes:', daysRemaining);
 
     if (now > expirationDate) {
       console.log('❌ [VERIFY-ACCESS] Acesso expirado');
@@ -193,19 +201,19 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('✅ [VERIFY-ACCESS] Acesso válido confirmado!');
-    console.log('✅ [VERIFY-ACCESS] ========================================');
 
     return NextResponse.json({
       success: true,
       message: 'Acesso válido',
       data: {
-        email: user.email,
-        plan: user.plan,
-        duration: user.duration,
-        purchaseDate: user.purchase_date,
-        expirationDate: user.expiration_date,
-        active: user.active,
-        status: user.status,
+        email: userEmail,
+        plan: userPlan,
+        duration: userDuration,
+        purchaseDate: userPurchaseDate,
+        expirationDate: userExpirationDate,
+        active: userActive,
+        status: userStatus,
+        quizCompleted: userQuizCompleted ?? false,
         daysRemaining
       }
     }, { headers: corsHeaders });

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Star } from "lucide-react";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -11,10 +10,14 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [showRegisterDialog, setShowRegisterDialog] = useState(false);
   const [loginData, setLoginData] = useState({ name: "", email: "" });
+  const [registerData, setRegisterData] = useState({ name: "", email: "" });
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [registerError, setRegisterError] = useState("");
   const router = useRouter();
 
   const testimonials = [
@@ -83,6 +86,53 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [testimonials.length]);
 
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsRegisterLoading(true);
+    setRegisterError("");
+
+    const name = registerData.name.trim();
+    const email = registerData.email.toLowerCase().trim();
+
+    if (!name || !email) {
+      setRegisterError("Preencha todos os campos.");
+      setIsRegisterLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${window.location.origin}/api/register-user`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        const userData = {
+          name: result.data.name || name,
+          email: result.data.email || email,
+          plan: result.data.plan,
+          duration: result.data.duration,
+          expirationDate: result.data.expirationDate,
+          active: result.data.active,
+          quizCompleted: result.data.quizCompleted,
+          daysRemaining: result.data.daysRemaining
+        };
+        localStorage.setItem('userData', JSON.stringify(userData));
+        setShowRegisterDialog(false);
+        router.push('/quiz');
+      } else {
+        setRegisterError(result.error || 'Erro ao criar conta. Tente novamente.');
+      }
+    } catch {
+      setRegisterError('Erro ao conectar com o servidor. Tente novamente.');
+    } finally {
+      setIsRegisterLoading(false);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -142,14 +192,18 @@ export default function Home() {
           duration: result.data.duration,
           expirationDate: result.data.expirationDate,
           purchaseDate: result.data.purchaseDate,
-          active: result.data.active
+          active: result.data.active,
+          quizCompleted: result.data.quizCompleted ?? false
         };
-        
-        console.log('💾 Salvando dados no localStorage:', userData);
+
         localStorage.setItem('userData', JSON.stringify(userData));
-        
-        console.log('🚀 Redirecionando para /plano...');
-        router.push('/plano');
+
+        // Se quiz não foi feito ainda, vai para o quiz
+        if (!result.data.quizCompleted) {
+          router.push('/quiz');
+        } else {
+          router.push('/plano');
+        }
         return;
       }
 
@@ -207,16 +261,15 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
-            <Link href="/quiz" className="w-full sm:w-auto">
-              <Button 
-                size="lg" 
-                className="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8 py-6 text-base font-bold rounded-full shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105 border-2 border-cyan-400/50"
-              >
-                Começar Grátis
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            
+            <Button
+              onClick={() => { setShowRegisterDialog(true); setRegisterError(""); setRegisterData({ name: "", email: "" }); }}
+              size="lg"
+              className="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8 py-6 text-base font-bold rounded-full shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105 border-2 border-cyan-400/50"
+            >
+              Criar Conta
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+
             <Button
               onClick={() => setShowLoginDialog(true)}
               variant="outline"
@@ -353,17 +406,16 @@ export default function Home() {
             Proteja Seu Investimento no Transplante
           </h2>
           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-            Faça o quiz gratuito e receba seu plano de manutenção pós-transplante personalizado
+            Crie sua conta grátis e receba seu plano de manutenção pós-transplante personalizado
           </p>
-          <Link href="/quiz">
-            <Button 
-              size="lg" 
-              className="bg-white text-teal-700 hover:bg-gray-100 px-10 py-6 text-lg font-bold rounded-full shadow-2xl hover:shadow-white/50 transition-all duration-300 hover:scale-105"
-            >
-              Iniciar Quiz Gratuito Agora
-              <ArrowRight className="ml-3 h-5 w-5" />
-            </Button>
-          </Link>
+          <Button
+            onClick={() => { setShowRegisterDialog(true); setRegisterError(""); setRegisterData({ name: "", email: "" }); }}
+            size="lg"
+            className="bg-white text-teal-700 hover:bg-gray-100 px-10 py-6 text-lg font-bold rounded-full shadow-2xl hover:shadow-white/50 transition-all duration-300 hover:scale-105"
+          >
+            Criar Conta Grátis Agora
+            <ArrowRight className="ml-3 h-5 w-5" />
+          </Button>
         </div>
       </section>
 
@@ -380,6 +432,71 @@ export default function Home() {
           </p>
         </div>
       </footer>
+
+      {/* Register Dialog */}
+      <Dialog open={showRegisterDialog} onOpenChange={setShowRegisterDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center">Criar Conta Grátis</DialogTitle>
+            <p className="text-sm text-center text-gray-500 mt-1">30 dias gratuitos — sem cartão de crédito</p>
+          </DialogHeader>
+          <form onSubmit={handleRegister} className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="register-name">Nome Completo</Label>
+              <Input
+                id="register-name"
+                type="text"
+                placeholder="Digite seu nome"
+                value={registerData.name}
+                onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                required
+                className="mt-1"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="register-email">E-mail</Label>
+              <Input
+                id="register-email"
+                type="email"
+                placeholder="seu@email.com"
+                value={registerData.email}
+                onChange={(e) => {
+                  setRegisterData({ ...registerData, email: e.target.value });
+                  setRegisterError("");
+                }}
+                required
+                className="mt-1"
+              />
+            </div>
+
+            {registerError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                <p className="font-semibold">❌ {registerError}</p>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={isRegisterLoading}
+              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white py-6 text-lg rounded-full mt-6 disabled:opacity-50"
+            >
+              {isRegisterLoading ? 'Criando conta...' : 'Criar Conta e Fazer Quiz'}
+            </Button>
+
+            <p className="text-xs text-center text-gray-500 mt-4">
+              Já tem conta?{' '}
+              <button
+                type="button"
+                onClick={() => { setShowRegisterDialog(false); setShowLoginDialog(true); }}
+                className="text-blue-600 underline hover:text-blue-800"
+              >
+                Acessar aqui
+              </button>
+            </p>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Login Dialog */}
       <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
@@ -435,7 +552,14 @@ export default function Home() {
             </Button>
 
             <p className="text-xs text-center text-gray-500 mt-4">
-              Não tem conta? Complete o quiz para criar uma.
+              Não tem conta?{' '}
+              <button
+                type="button"
+                onClick={() => { setShowLoginDialog(false); setShowRegisterDialog(true); }}
+                className="text-blue-600 underline hover:text-blue-800"
+              >
+                Criar conta grátis
+              </button>
             </p>
           </form>
         </DialogContent>
