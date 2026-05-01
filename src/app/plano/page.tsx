@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, ChevronLeft, ChevronRight, Calendar, TrendingUp, Award, MessageCircle, User, Menu, Zap, ArrowRight, Lock, Clock } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Calendar, TrendingUp, Award, MessageCircle, User, Menu, ArrowRight, Lock, Clock } from "lucide-react";
 import { weeklyMealPlan } from "@/lib/data/meal-plans";
 import { generateFullMealPlan } from "@/lib/data/full-meal-plan";
 import { Progress } from "@/components/ui/progress";
@@ -204,33 +204,6 @@ export default function PlanoPage() {
             </div>
           </Card>
         </div>
-
-        {/* Alerta de Plano - Mostrar somente se não for o plano de 90 dias */}
-        {userPlanDuration < 90 && (
-          <Card className="p-6 mb-8 bg-gradient-to-br from-amber-500/20 to-orange-600/20 backdrop-blur-xl border border-amber-400/40 shadow-lg">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Lock className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-1">
-                    Você tem acesso a {userPlanDuration} dias de receitas
-                  </h3>
-                  <p className="text-amber-100 text-sm">
-                    Desbloqueie até {90 - userPlanDuration} dias adicionais para fortalecer ainda mais seus enxertos!
-                  </p>
-                </div>
-              </div>
-              <Link href="/planos">
-                <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-6 py-6 text-base font-bold rounded-full shadow-lg whitespace-nowrap">
-                  Fazer Upgrade
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-          </Card>
-        )}
 
         {/* Day Selector */}
         <Card className="p-6 mb-8 bg-white/5 backdrop-blur-xl border border-white/10">
