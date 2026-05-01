@@ -205,7 +205,7 @@ export default function PlanoPage() {
           </Card>
         </div>
 
-        {/* Day Selector */}
+        {/* Seletor de Dia */}
         <Card className="p-6 mb-8 bg-white/5 backdrop-blur-xl border border-white/10">
           <div className="flex items-center justify-between mb-6">
             <Button
